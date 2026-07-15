@@ -1,0 +1,9 @@
+# Lixo do macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editores
+.vscode/
+.idea/
+*.swp
