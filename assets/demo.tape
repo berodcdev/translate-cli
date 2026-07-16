@@ -6,23 +6,21 @@
 
 Output assets/demo.gif
 
-Set Shell "zsh"
-Set FontFamily "MesloLGL Nerd Font Mono"
-Set FontSize 20
-Set Theme "Catppuccin Mocha"
-Set Padding 30
-Set Width 1420
-Set Height 560
-Set TypingSpeed 45ms
+Set Shell "bash"
+Set FontSize 15
+Set Width 1240
+Set Height 650
+Set Padding 24
+Set TypingSpeed 55ms
+Set Theme { "name": "alive-matrix", "background": "#0a0d0a", "foreground": "#c8e6c9", "black": "#0a0d0a", "red": "#ff5f5f", "green": "#39ff14", "yellow": "#f4f465", "blue": "#5fafff", "magenta": "#d787ff", "cyan": "#5fffd7", "white": "#e8f5e9", "brightBlack": "#5c6d5c", "brightRed": "#ff8787", "brightGreen": "#8bff6b", "brightYellow": "#ffff87", "brightBlue": "#87d7ff", "brightMagenta": "#ffafff", "brightCyan": "#afffff", "brightWhite": "#ffffff", "cursor": "#39ff14", "selection": "#1f3d1f" }
 
-# --- Setup escondido: PATH, comentários interativos, prompt limpo ------------
+# --- Setup escondido: PATH, prompt limpo e pré-aquecimento do modelo --------
 # cd pra um diretório temporário (fora de qualquer repo) pro `git status` do
 # beat 1 errar de verdade. O PROMPT é literal, então o cd não muda o que aparece.
 Hide
 Type 'export PATH="$HOME/bin:$PATH"'  Enter
-Type 'setopt interactive_comments'  Enter
 Type 'cd "$(mktemp -d)"'  Enter
-Type "precmd_functions=(); RPROMPT=''; PROMPT='%F{147}~/projeto%f %F{219}❯%f '"  Enter
+Type "PS1='\[\033[92m\]~/projeto\[\033[0m\] \[\033[95m\]❯\[\033[0m\] '"  Enter
 # Pré-aquece o modelo: a 1ª chamada carrega ~5 GB na RAM (~7s a frio) e, sem
 # isso, atrasa o beat 1 e embola a saída dos seguintes. Escondido = não conta
 # frame no GIF; o Sleep só cobre o load a frio.
@@ -36,16 +34,20 @@ Sleep 900ms
 Type "# erro em inglês? traduz no terminal — 100% offline, teu código não vai pra nuvem"  Sleep 500ms  Enter
 Sleep 1000ms
 
-# Sleeps = latência quente medida (git 2,5s / traceback 4,8s / -t 1,1s) + folga,
-# pra tradução aparecer antes do vhs digitar o próximo comando.
+# Sleeps = latência quente medida (git ~2,5s / traceback ~4,8s / -t ~1,1s) +
+# folga, pra tradução aparecer antes do vhs digitar o próximo comando.
 # --- 1) O erro de git mais universal que existe (real, fora de repo) ---------
-Type "git status 2>&1 | translate"  Sleep 400ms  Enter
+Type "git status 2>&1 | translate"  Sleep 400ms  Enter    # >>> AJUSTE AQUI
 Sleep 4500ms
 
 # --- 2) Traceback inteiro do Python: traduz a prosa, PRESERVA o código -------
-Type "python3 -c 'print(1 + [])' 2>&1 | translate"  Sleep 400ms  Enter
+Type "python3 -c 'print(1 + [])' 2>&1 | translate"  Sleep 400ms  Enter    # >>> AJUSTE AQUI
 Sleep 7500ms
 
-# --- 3) E também texto do dia a dia, com destino forçado (-t) ----------------
-Type 'translate -t en "revisa meu PR quando puder, é rapidinho"'  Sleep 400ms  Enter
-Sleep 3500ms
+# --- 3) Import quebrado (typo clássico): ModuleNotFoundError traduzido -------
+Type "python3 -c 'import requestz' 2>&1 | translate"  Sleep 400ms  Enter    # >>> AJUSTE AQUI
+Sleep 6000ms
+
+# --- 4) E também texto do dia a dia, com destino forçado (-t) ----------------
+Type 'translate -t en "revisa meu PR quando puder, é rapidinho"'  Sleep 400ms  Enter    # >>> AJUSTE AQUI
+Sleep 5000ms
